@@ -1,0 +1,83 @@
+- id: '1661458151243'
+  alias: På 00:00
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:00:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: ca45d506f406bc800f4bdc2b28243918
+    entity_id: switch.smart_plug_2
+    domain: switch
+  mode: single
+- id: '1661458202109'
+  alias: Av 06:00
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: ca45d506f406bc800f4bdc2b28243918
+    entity_id: switch.smart_plug_2
+    domain: switch
+  mode: single
+- id: '1662057950821'
+  alias: På når billig
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.nordpool_cheapest_12_hours
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  condition: []
+  action:
+  - type: turn_on
+    device_id: ca45d506f406bc800f4bdc2b28243918
+    entity_id: switch.smart_plug_2
+    domain: switch
+  mode: single
+- id: '1662057996575'
+  alias: Av når dyrt
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.nordpool_cheapest_12_hours
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  condition: []
+  action:
+  - type: turn_off
+    device_id: ca45d506f406bc800f4bdc2b28243918
+    entity_id: switch.smart_plug_2
+    domain: switch
+  mode: single
+- id: '1664308699598'
+  alias: Sett temp til 18
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: b3cd6270f33d78c36272df977f02ed81
+    entity_id: sensor.temperature_5
+    domain: sensor
+    below: 14
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 19
+    target:
+      entity_id:
+      - climate.mill_panel
+  mode: single

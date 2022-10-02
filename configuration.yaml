@@ -1,0 +1,72 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+nordpool:
+
+sensor:
+  - platform: nordpool
+    currency: "NOK"
+    region: "Tr.heim"
+    additional_costs: '{% set s = {
+    "night": 0.0787,
+    "day": 0.1574
+}
+%}
+{% if now().hour >=6 and now().hour <23 %}
+    {{s.day|float}}
+{% else %}
+    {{s.night|float}}
+{% endif %}'
+  - platform: template
+    sensors:
+      elspot_daily_avg:
+        value_template: >
+          {{ state_attr("sensor.electricity_price_stadsing_dahls_gate_12", "avg_price") }}
+        unit_of_measurement: "NOK/kWh"
+        friendly_name: Daily spotprice average
+
+
+binary_sensor:
+  - platform: template
+    sensors:
+      nordpool_cheapest_4_hours:
+        value_template: >-
+          {% set l=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'raw_today')|sort(attribute='value') %}
+          {{ (now() >= l[0].start and now() <= l[0].end)
+            or (now() >= l[1].start and now() <= l[1].end)
+            or (now() >= l[2].start and now() <= l[2].end)
+            or (now() >= l[3].start and now() <= l[3].end) }}
+      nordpool_cheapest_8_hours:
+        value_template: >-
+          {% set l=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'raw_today')|sort(attribute='value') %}
+          {{ (now() >= l[0].start and now() <= l[0].end)
+            or (now() >= l[1].start and now() <= l[1].end)
+            or (now() >= l[2].start and now() <= l[2].end)
+            or (now() >= l[3].start and now() <= l[3].end)
+            or (now() >= l[4].start and now() <= l[4].end)
+            or (now() >= l[5].start and now() <= l[5].end)
+            or (now() >= l[6].start and now() <= l[6].end)
+            or (now() >= l[7].start and now() <= l[7].end) }}
+      nordpool_cheapest_12_hours:
+        value_template: >-
+          {% set l=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'raw_today')|sort(attribute='value') %}
+          {{ (now() >= l[0].start and now() <= l[0].end)
+            or (now() >= l[1].start and now() <= l[1].end)
+            or (now() >= l[2].start and now() <= l[2].end)
+            or (now() >= l[3].start and now() <= l[3].end)
+            or (now() >= l[4].start and now() <= l[4].end)
+            or (now() >= l[5].start and now() <= l[5].end)
+            or (now() >= l[6].start and now() <= l[6].end)
+            or (now() >= l[7].start and now() <= l[7].end)
+            or (now() >= l[8].start and now() <= l[8].end)
+            or (now() >= l[9].start and now() <= l[9].end)
+            or (now() >= l[10].start and now() <= l[10].end)
+            or (now() >= l[11].start and now() <= l[11].end) }}
