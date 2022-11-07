@@ -32,6 +32,14 @@ sensor:
           {{ state_attr("sensor.electricity_price_stadsing_dahls_gate_12", "avg_price") }}
         unit_of_measurement: "NOK/kWh"
         friendly_name: Daily spotprice average
+      thermostat:
+        value_template: >
+          {% set mean=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'average') %}
+          {% set min=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'min') %}
+          {% set curr=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'current_price') %}
+          {{ 23 - 2*(curr-min)/(mean-min) }}
+        unit_of_measurement: "C"
+        friendly_name: Thermostat set point
 
 
 binary_sensor:
@@ -70,3 +78,10 @@ binary_sensor:
             or (now() >= l[9].start and now() <= l[9].end)
             or (now() >= l[10].start and now() <= l[10].end)
             or (now() >= l[11].start and now() <= l[11].end) }}
+            
+proximity:
+  home:
+    devices:
+      - device_tracker.sm_g986b
+    tolerance: 50
+    unit_of_measurement: km
