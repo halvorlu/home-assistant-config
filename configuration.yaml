@@ -37,7 +37,8 @@ sensor:
           {% set mean=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'average') %}
           {% set min=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'min') %}
           {% set curr=state_attr('sensor.nordpool_kwh_trheim_nok_3_10_025', 'current_price') %}
-          {{ 23 - 2*(curr-min)/(mean-min) }}
+          {% set denom = (mean-min) if mean != min else 1 %}
+          {{ ((states('input_number.onsket_temperatur') | float + 2) - 2*(curr-min)/denom) | round(1) }}
         unit_of_measurement: "C"
         friendly_name: Thermostat set point
 

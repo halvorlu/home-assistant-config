@@ -68,7 +68,11 @@
   trigger:
   - platform: state
     entity_id:
-    - sensor.electricity_price_stadsing_dahls_gate_12
+    - sensor.thermostat
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
   condition: []
   action:
   - service: climate.set_temperature
